@@ -1,21 +1,24 @@
 #!/bin/bash
+
+sudo yum install amazon-cloudwatch-agent -y
+
+sudo wget -L https://raw.githubusercontent.com/shankjs/cloud-training/main/smartbank-userdata/amazon-cloudwatch-agent.json
+
+sudo chmod 777 amazon-cloudwatch-agent.json
+sudo mv amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/
+
+
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+sudo /bin/systemctl start amazon-cloudwatch-agent
+
+sudo mkdir /home/ec2-user/api
+sudo chmod 777 /home/ec2-user/api
+
 sudo yum -y update
 sudo yum -y install java
-sudo yum install -y git
-git clone https://gitee.com/uyao791_admin/aws-bankend-api.git
-cd aws-bankend-api
-sudo echo "spring.datasource.url=jdbc:postgresql://\$${db_endpoint}:5432/\$${db_name}
-spring.datasource.driverClassName=org.postgresql.Driver
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
-logging.level.org.hibernate.SQL=DEBUG
-spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
-logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE" > application.properties
 
-sudo amazon-linux-extras install docker
-sudo service docker start
-sudo usermod -a -G docker ec2-user
-sudo docker build -t springdocker .
-sudo docker run -p 80:8080 springdocker -v /home/ec2-user/aws-bankend-api:/data/java/config -d
+sudo cd /
+sudo wget -L https://github.com/shankjs/cloud-training/blob/main/smartbank-api-jar/smart-bank-api.jar
+
+sudo java -Dserver.port=80 -Dspring.datasource.url=jdbc:postgresql://${db_endpoint}/${db_name} -Dserver.servlet.context-path=/api -jar smart-bank-api.jar --logging.file=/home/ec2-user/api/service.log &
 
