@@ -1,2 +1,2 @@
 # cloud-training
-aXess BC Cloud Training
+sb application project
