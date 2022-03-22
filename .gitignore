@@ -1,1 +1,6 @@
-application.properties
+### Docker ###
+Dockerfile
+
+### Application Properties ###
+/src/main/resources/application.properties
+
