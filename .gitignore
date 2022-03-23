@@ -2,5 +2,4 @@
 Dockerfile
 
 ### Application Properties ###
-/src/main/resources/application.properties
-
+smartbankapi-postgres/src/main/resources/application.properties
